@@ -10,6 +10,34 @@ You have a table customer_transactions with the following columns:
 You need to retrieve all the customer_names (ordered) whose transactions have a 10-second gap from each other.*/
 
 
+/*Please add ; after each select statement*/
+CREATE PROCEDURE bankRobbery()
+
+SELECT q.customer_name FROM
+
+(SELECT t1.customer_name, COUNT(t1.customer_name) as z
+
+FROM customer_transactions AS t1 INNER JOIN customer_transactions AS t2 
+
+ON t1.customer_name = t2.customer_name 
+
+WHERE TIMESTAMPDIFF(SECOND, t1.transaction_time, t2.transaction_time) = 10
+
+GROUP BY t1.customer_name) as q 
+
+INNER JOIN (SELECT customer_name, COUNT(customer_name) as c 
+            
+FROM customer_transactions 
+            
+GROUP BY customer_name) as w
+
+ON q.customer_name = w.customer_name
+
+AND z = c - 1
+
+ORDER BY q.customer_name;
+
+
 
 CREATE PROCEDURE bankRobbery()
 
